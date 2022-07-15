@@ -17,13 +17,20 @@ using namespace std;
 
 class snake
 {
-	int headX, headY;
-	int tailX, tailY;
-	int headingX, headingY;
+public:
+	snake() 
+		: headPosX(0), headPosY(0), tailPosX(0), tailPosY(0), length(1)
+	{
+		
+	}
+private:
+	int headPosX, headPosY;
+	int tailPosX, tailPosY;
+	int headingX[SIZE * SIZE] = { 0 }, headingY[SIZE * SIZE] = { 0 };
 	int length;
 };
 
-void Init(int (*map)[SIZE])
+void Init(int (*map)[SIZE], snake &player)
 {
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -90,11 +97,12 @@ void Release()
 
 int main()
 {
+	snake* player = new snake();
 	int map[SIZE][SIZE] = { 0 }, x = 0, y = 0;
 	int curPosX = START_POS_X, curPosY = START_POS_Y;
 	bool isGameOver = false;
 	clock_t curTime, oldTime;
-	Init(map);
+	Init(map, *player);
 
 	while (1)
 	{
