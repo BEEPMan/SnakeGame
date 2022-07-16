@@ -1,36 +1,148 @@
 #include<iostream>
 #include<time.h>
+#include<stdlib.h>
 #include<Windows.h>
 #define SIZE 16
+#define START_POS_Y 3
+#define START_POS_X 3
+
 #define WALL -1
 #define FLOOR 0
 #define HEAD 1
 #define BODY 2
 #define APPLE 3
-#define START_POS_X 3
-#define START_POS_Y 3
 
-// WALL = "¡á", FLOOR = "¡à", HEAD = "¡Ü", BODY = "¡Û", APPLE = "¡Ú"
+#define LEFT 11
+#define RIGHT 12
+#define UP 13
+#define DOWN 14
+
+// WALL = "â– ", FLOOR = "â–¡", HEAD = "â—", BODY = "â—‹", APPLE = "â˜…"
 // WALL = "\u25A0", FLOOR = "\u25A1", HEAD = "\u25CF", BODY = "\u25CB", APPLE = "\u2605"
 
 using namespace std;
 
+static int map[SIZE][SIZE] = { 0 };
+
+class coord
+{
+public:
+	coord(){}
+	coord(int initY, int initX)
+		: y(initY), x(initX)
+	{
+
+	}
+	int getY()
+	{
+		return y;
+	}
+	int getX()
+	{
+		return x;
+	}
+	void setY(int dest)
+	{
+		y = dest;
+	}
+	void setX(int dest)
+	{
+		x = dest;
+	}
+	void goOneSpace(int direction)
+	{
+		if (direction == LEFT)
+		{
+			x -= 1;
+		}
+		else if (direction == RIGHT)
+		{
+			x += 1;
+		}
+		else if (direction == UP)
+		{
+			y -= 1;
+		}
+		else if (direction == DOWN)
+		{
+			y += 1;
+		}
+	}
+private:
+	int y, x;
+};
+
 class snake
 {
 public:
-	snake() 
-		: headPosX(0), headPosY(0), tailPosX(0), tailPosY(0), length(1)
+	snake()
+		: headPos(START_POS_Y, START_POS_X), heading(0), length(1)
 	{
-		
+
+	}
+	coord getHeadPosition()
+	{
+		return headPos;
+	}
+	int getHeadDirection()
+	{
+		return heading;
+	}
+	void move(bool isEat)
+	{
+		if (length > 1)
+		{
+			if (isEat)
+			{
+				tailPos[length].setY(headPos.getY());
+				tailPos[length].setX(headPos.getX());
+				map[tailPos[length].getY()][tailPos[length].getX()] = BODY;
+				length++;
+			}
+			else
+			{
+				map[tailPos[1].getY()][tailPos[1].getX()] = FLOOR;
+				for (int i = 1; i < length - 1; i++)
+				{
+					tailPos[i].setY(tailPos[i + 1].getY());
+					tailPos[i].setX(tailPos[i + 1].getX());
+				}
+				tailPos[length - 1].setY(headPos.getY());
+				tailPos[length - 1].setX(headPos.getX());
+				map[tailPos[length - 1].getY()][tailPos[length - 1].getX()] = BODY;
+			}
+			
+		}
+		else
+		{
+			if (isEat)
+			{
+				map[headPos.getY()][headPos.getX()] = BODY;
+				tailPos[length].setX(headPos.getY());
+				tailPos[length].setY(headPos.getX());
+				length++;
+			}
+			else
+				map[headPos.getY()][headPos.getX()] = FLOOR;
+		}
+		headPos.goOneSpace(heading);
+
+		map[headPos.getY()][headPos.getX()] = HEAD;
+	}
+	void Rotate(int direction)
+	{
+		heading = direction;
 	}
 private:
-	int headPosX, headPosY;
-	int tailPosX, tailPosY;
-	int headingX[SIZE * SIZE] = { 0 }, headingY[SIZE * SIZE] = { 0 };
+	coord headPos;
+	int heading;
+	coord tailPos[SIZE * SIZE + 3];
 	int length;
 };
 
-void Init(int (*map)[SIZE], snake &player)
+static snake player;
+
+void Init()
 {
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -39,25 +151,40 @@ void Init(int (*map)[SIZE], snake &player)
 		map[i][SIZE - 1] = WALL;
 		map[SIZE - 1][i] = WALL;
 	}
-	map[START_POS_X][START_POS_Y] = HEAD;
+	coord* snakePos = new coord(player.getHeadPosition());
+	map[snakePos->getY()][snakePos->getX()] = HEAD;
+	delete snakePos;
+	coord* applePos = new coord((int)rand() % (SIZE - 2) + 1, (int)rand() % (SIZE - 2) + 1);
+	map[applePos->getY()][applePos->getX()] = APPLE;
+	delete applePos;
+	return;
 }
 
-void Update(int(*map)[SIZE], int* curPosX, int* curPosY, int x, int y, bool* isGameOver)
+void Update(bool* isGameOver)
 {
-	map[(*curPosY)][(*curPosX)] = FLOOR;
-	int* heading = &(map[(*curPosY) - y][(*curPosX) + x]);
-	if ((*heading) == WALL || (*heading) == BODY)
+	coord* snakePos = new coord(player.getHeadPosition());
+	snakePos->goOneSpace(player.getHeadDirection());
+	if (map[snakePos->getY()][snakePos->getX()] == WALL || map[snakePos->getY()][snakePos->getX()] == BODY)
 	{
 		(*isGameOver) = true;
 		return;
 	}
-	(*heading) = HEAD;
-	(*curPosX) += x;
-	(*curPosY) -= y;
+	if (map[snakePos->getY()][snakePos->getX()] == APPLE)
+	{
+		player.move(true);
+		coord* applePos = new coord((int)rand() % (SIZE - 2) + 1, (int)rand() % (SIZE - 2) + 1);
+		map[applePos->getY()][applePos->getX()] = APPLE;
+		delete applePos;
+	}
+	else
+	{
+		player.move(false);
+	}
+	delete snakePos;
 	return;
 }
 
-void Render(int(*map)[SIZE])
+void Render()
 {
 	system("cls");
 
@@ -88,21 +215,20 @@ void Render(int(*map)[SIZE])
 		}
 		cout << endl;
 	}
+	return;
 }
 
 void Release()
 {
-
+	return;
 }
 
 int main()
 {
-	snake* player = new snake();
-	int map[SIZE][SIZE] = { 0 }, x = 0, y = 0;
-	int curPosX = START_POS_X, curPosY = START_POS_Y;
 	bool isGameOver = false;
 	clock_t curTime, oldTime;
-	Init(map, *player);
+	srand(time(NULL));
+	Init();
 
 	while (1)
 	{
@@ -110,33 +236,29 @@ int main()
 			break;
 		else if (GetAsyncKeyState(VK_LEFT) & 0x0001)
 		{
-			x = -1;
-			y = 0;
+			player.Rotate(LEFT);
 		}
 		else if (GetAsyncKeyState(VK_RIGHT) & 0x0001)
 		{
-			x = 1;
-			y = 0;
+			player.Rotate(RIGHT);
 		}
 		else if (GetAsyncKeyState(VK_UP) & 0x0001)
 		{
-			x = 0;
-			y = 1;
+			player.Rotate(UP);
 		}
 		else if (GetAsyncKeyState(VK_DOWN) & 0x0001)
 		{
-			x = 0;
-			y = -1;
+			player.Rotate(DOWN);
 		}
 		oldTime = clock();
-		Update(map, &curPosX, &curPosY, x, y, &isGameOver);
+		Update(&isGameOver);
 		if (isGameOver)
 		{
 			system("cls");
 			cout << "GameOver" << endl;
 			break;
 		}
-		Render(map);
+		Render();
 		while (1)
 		{
 			curTime = clock();
