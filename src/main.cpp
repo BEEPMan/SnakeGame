@@ -2,6 +2,7 @@
 #include<time.h>
 #include<stdlib.h>
 #include<Windows.h>
+#include"coord.h"
 #define SIZE 16
 #define START_POS_Y 3
 #define START_POS_X 3
@@ -18,59 +19,12 @@
 #define DOWN 14
 
 // WALL = "■", FLOOR = "□", HEAD = "●", BODY = "○", APPLE = "★"
-// WALL = "\u25A0", FLOOR = "\u25A1", HEAD = "\u25CF", BODY = "\u25CB", APPLE = "\u2605"
+// WALL = "\u25A0", FLOOR = "\u25A1", HEAD = "\u25CF", BODY = "\u25C6", APPLE = "\u2605"
 
 using namespace std;
 
 static int map[SIZE][SIZE] = { 0 };
-
-class coord
-{
-public:
-	coord(){}
-	coord(int initY, int initX)
-		: y(initY), x(initX)
-	{
-
-	}
-	int getY()
-	{
-		return y;
-	}
-	int getX()
-	{
-		return x;
-	}
-	void setY(int dest)
-	{
-		y = dest;
-	}
-	void setX(int dest)
-	{
-		x = dest;
-	}
-	void goOneSpace(int direction)
-	{
-		if (direction == LEFT)
-		{
-			x -= 1;
-		}
-		else if (direction == RIGHT)
-		{
-			x += 1;
-		}
-		else if (direction == UP)
-		{
-			y -= 1;
-		}
-		else if (direction == DOWN)
-		{
-			y += 1;
-		}
-	}
-private:
-	int y, x;
-};
+static int tick = 500;
 
 class snake
 {
@@ -87,6 +41,10 @@ public:
 	int getHeadDirection()
 	{
 		return heading;
+	}
+	int getLength()
+	{
+		return length;
 	}
 	void move(bool isEat)
 	{
@@ -111,15 +69,14 @@ public:
 				tailPos[length - 1].setX(headPos.getX());
 				map[tailPos[length - 1].getY()][tailPos[length - 1].getX()] = BODY;
 			}
-			
 		}
 		else
 		{
 			if (isEat)
 			{
 				map[headPos.getY()][headPos.getX()] = BODY;
-				tailPos[length].setX(headPos.getY());
-				tailPos[length].setY(headPos.getX());
+				tailPos[length].setY(headPos.getY());
+				tailPos[length].setX(headPos.getX());
 				length++;
 			}
 			else
@@ -142,6 +99,17 @@ private:
 
 static snake player;
 
+void makeApple()
+{
+	coord* applePos = new coord((int)rand() % (SIZE - 2) + 1, (int)rand() % (SIZE - 2) + 1);
+	while (map[applePos->getY()][applePos->getX()] != FLOOR)
+	{
+		applePos = new coord((int)rand() % (SIZE - 2) + 1, (int)rand() % (SIZE - 2) + 1);
+	}
+	map[applePos->getY()][applePos->getX()] = APPLE;
+	delete applePos;
+}
+
 void Init()
 {
 	for (int i = 0; i < SIZE; i++)
@@ -154,9 +122,7 @@ void Init()
 	coord* snakePos = new coord(player.getHeadPosition());
 	map[snakePos->getY()][snakePos->getX()] = HEAD;
 	delete snakePos;
-	coord* applePos = new coord((int)rand() % (SIZE - 2) + 1, (int)rand() % (SIZE - 2) + 1);
-	map[applePos->getY()][applePos->getX()] = APPLE;
-	delete applePos;
+	makeApple();
 	return;
 }
 
@@ -172,9 +138,9 @@ void Update(bool* isGameOver)
 	if (map[snakePos->getY()][snakePos->getX()] == APPLE)
 	{
 		player.move(true);
-		coord* applePos = new coord((int)rand() % (SIZE - 2) + 1, (int)rand() % (SIZE - 2) + 1);
-		map[applePos->getY()][applePos->getX()] = APPLE;
-		delete applePos;
+		makeApple();
+		if (player.getLength() % 5 == 0 && tick > 100)
+			tick -=  100;
 	}
 	else
 	{
@@ -206,7 +172,7 @@ void Render()
 			}
 			else if (map[i][j] == BODY)
 			{
-				cout << "\u25CB";
+				cout << "\u25C6";
 			}
 			else if (map[i][j] == APPLE)
 			{
@@ -215,6 +181,7 @@ void Render()
 		}
 		cout << endl;
 	}
+	cout << endl << "SCORE: " << player.getLength() << endl;
 	return;
 }
 
@@ -262,7 +229,7 @@ int main()
 		while (1)
 		{
 			curTime = clock();
-			if (curTime - oldTime > 500)
+			if (curTime - oldTime > tick)
 				break;
 		}
 	}
