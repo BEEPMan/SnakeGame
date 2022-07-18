@@ -2,6 +2,7 @@
 
 #include<queue>
 #include"coord.h"
+#include"map.h"
 
 using namespace std;
 
@@ -14,8 +15,8 @@ public:
 	coord getTailPosition();
 	int getHeadDirection();
 	int getLength();
-	void move(bool isEat);
-	void Rotate(int direction);
+	void move(map& table, int& colliedObj);
+	void rotate(int direction);
 private:
 	coord headPos;
 	int heading;

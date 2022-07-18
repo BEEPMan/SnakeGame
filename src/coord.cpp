@@ -5,27 +5,33 @@ coord::coord()
 {
 
 }
+
 coord::coord(int initX, int initY)
-	: x(initY), y(initX)
+	: x(initX), y(initY)
 {
 
 }
+
 int coord::getX()
 {
 	return x;
 }
+
 int coord::getY()
 {
 	return y;
 }
+
 void coord::setX(int dest)
 {
 	x = dest;
 }
+
 void coord::setY(int dest)
 {
 	y = dest;
 }
+
 void coord::goOneSpace(int direction)
 {
 	if (direction == LEFT)
