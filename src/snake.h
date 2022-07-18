@@ -1,6 +1,6 @@
 #pragma once
 
-#include<vector>
+#include<queue>
 #include"coord.h"
 
 using namespace std;
@@ -11,6 +11,7 @@ public:
 	snake();
 	snake(coord startPos, int maxSize);
 	coord getHeadPosition();
+	coord getTailPosition();
 	int getHeadDirection();
 	int getLength();
 	void move(bool isEat);
@@ -18,6 +19,6 @@ public:
 private:
 	coord headPos;
 	int heading;
-	coord* tailPos;
+	queue<coord> bodyPos;
 	int length;
 };

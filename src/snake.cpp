@@ -4,16 +4,18 @@
 snake::snake()
 	: headPos(1, 1), heading(0), length(1)
 {
-	tailPos = new coord[3];
 }
 snake::snake(coord startPos, int maxSize)
-	: headPos(startPos.getY(), startPos.getX()), heading(0), length(1)
+	: headPos(startPos.getX(), startPos.getY()), heading(0), length(1)
 {
-	tailPos = new coord[maxSize];
 }
 coord snake::getHeadPosition()
 {
 	return headPos;
+}
+coord snake::getTailPosition()
+{
+	return bodyPos.front();
 }
 int snake::getHeadDirection()
 {
@@ -29,27 +31,20 @@ void snake::move(bool isEat)
 	{
 		if (isEat)
 		{
-			tailPos[length].setY(headPos.getY());
-			tailPos[length].setX(headPos.getX());
+			bodyPos.push(headPos);
 			length++;
 		}
 		else
 		{
-			for (int i = 1; i < length - 1; i++)
-			{
-				tailPos[i].setY(tailPos[i + 1].getY());
-				tailPos[i].setX(tailPos[i + 1].getX());
-			}
-			tailPos[length - 1].setY(headPos.getY());
-			tailPos[length - 1].setX(headPos.getX());
+			bodyPos.push(headPos);
+			bodyPos.pop();
 		}
 	}
 	else
 	{
 		if (isEat)
 		{
-			tailPos[length].setY(headPos.getY());
-			tailPos[length].setX(headPos.getX());
+			bodyPos.push(headPos);
 			length++;
 		}
 	}

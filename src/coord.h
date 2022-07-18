@@ -9,13 +9,13 @@ class coord
 {
 public:
 	coord();
-	coord(int initY, int initX);
-	int getY();
+	coord(int initX, int initY);
 	int getX();
-	void setY(int dest);
+	int getY();
 	void setX(int dest);
+	void setY(int dest);
 	void goOneSpace(int direction);
 private:
-	int y;
 	int x;
+	int y;
 };

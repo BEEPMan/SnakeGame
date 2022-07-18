@@ -1,47 +1,47 @@
 #include"coord.h"
 
 coord::coord()
-	: y(0), x(0)
+	: x(0), y(0)
 {
 
 }
-coord::coord(int initY, int initX)
-	: y(initY), x(initX)
+coord::coord(int initX, int initY)
+	: x(initY), y(initX)
 {
 
-}
-int coord::getY()
-{
-	return y;
 }
 int coord::getX()
 {
 	return x;
 }
-void coord::setY(int dest)
+int coord::getY()
 {
-	y = dest;
+	return y;
 }
 void coord::setX(int dest)
 {
 	x = dest;
 }
+void coord::setY(int dest)
+{
+	y = dest;
+}
 void coord::goOneSpace(int direction)
 {
 	if (direction == LEFT)
 	{
-		x -= 1;
+		y -= 1;
 	}
 	else if (direction == RIGHT)
 	{
-		x += 1;
+		y += 1;
 	}
 	else if (direction == UP)
 	{
-		y -= 1;
+		x -= 1;
 	}
 	else if (direction == DOWN)
 	{
-		y += 1;
+		x += 1;
 	}
 }
