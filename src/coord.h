@@ -5,17 +5,17 @@
 #define UP 13
 #define DOWN 14
 
-class coord
+class Coord
 {
 public:
-	coord();
-	coord(int initX, int initY);
+	Coord();
+	Coord(int x, int y);
 	int getX();
 	int getY();
-	void setX(int dest);
-	void setY(int dest);
+	void setX(int x);
+	void setY(int y);
 	void goOneSpace(int direction);
 private:
-	int x;
-	int y;
+	int mX;
+	int mY;
 };

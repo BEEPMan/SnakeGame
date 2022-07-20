@@ -1,6 +1,9 @@
-#include"map.h"
+#include"GameBoard.h"
+#include"coord.h"
 
-map::map(int size)
+GameBoard::GameBoard() {}
+
+GameBoard::GameBoard(int size)
 	: mSize(size)
 {
 	mTable = new int* [size];
@@ -11,7 +14,7 @@ map::map(int size)
 	}
 }
 
-map::~map()
+GameBoard::~GameBoard()
 {
 	for (int i = 0; i < mSize; i++)
 	{
@@ -20,28 +23,28 @@ map::~map()
 	delete[] mTable;
 }
 
-int map::getTile(int x, int y)
+int GameBoard::getTile(int x, int y)
 {
 	return mTable[x][y];
 }
 
-void map::setTile(int x, int y, int objNum)
+void GameBoard::setTile(int x, int y, int objNum)
 {
 	mTable[x][y] = objNum;
 }
 
-void map::placeApple()
+void GameBoard::placeApple()
 {
-	coord* applePos = new coord((int)rand() % (mSize - 2) + 1, (int)rand() % (mSize - 2) + 1);
+	Coord* applePos = new Coord((int)rand() % (mSize - 2) + 1, (int)rand() % (mSize - 2) + 1);
 	while (mTable[applePos->getX()][applePos->getY()] != FLOOR)
 	{
-		applePos = new coord((int)rand() % (mSize - 2) + 1, (int)rand() % (mSize - 2) + 1);
+		applePos = new Coord((int)rand() % (mSize - 2) + 1, (int)rand() % (mSize - 2) + 1);
 	}
 	mTable[applePos->getX()][applePos->getY()] = APPLE;
 	delete applePos;
 }
 
-void map::initMap()
+void GameBoard::initGameBoard()
 {
 	for (int i = 0; i < mSize; i++)
 	{
@@ -52,7 +55,7 @@ void map::initMap()
 	}
 }
 
-void map::printMap()
+void GameBoard::printGameBoard()
 {
 	for (int i = 0; i < mSize; i++)
 	{

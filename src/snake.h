@@ -2,24 +2,24 @@
 
 #include<queue>
 #include"coord.h"
-#include"map.h"
+#include"gameBoard.h"
 
 using namespace std;
 
-class snake
+class Snake
 {
 public:
-	snake();
-	snake(coord startPos, int maxSize);
-	coord getHeadPosition();
-	coord getTailPosition();
+	Snake();
+	Snake(Coord startPos, int maxSize);
+	Coord getHeadPosition();
+	Coord getTailPosition();
 	int getHeadDirection();
 	int getLength();
-	void move(map& table, int& colliedObj);
+	void move(GameBoard& table, int& colliedObj);
 	void rotate(int direction);
 private:
-	coord headPos;
-	int heading;
-	queue<coord> bodyPos;
-	int length;
+	Coord mHeadPos;
+	int mHeading;
+	queue<Coord> mBodyPos;
+	int mLength;
 };

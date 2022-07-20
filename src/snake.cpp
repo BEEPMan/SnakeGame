@@ -1,39 +1,39 @@
-#include"snake.h"
+#include"Snake.h"
 
-snake::snake()
-	: headPos(1, 1), heading(0), length(1)
+Snake::Snake()
+	: mHeadPos(1, 1), mHeading(0), mLength(1)
 {
 }
 
-snake::snake(coord startPos, int maxSize)
-	: headPos(startPos.getX(), startPos.getY()), heading(0), length(1)
+Snake::Snake(Coord startPos, int maxSize)
+	: mHeadPos(startPos.getX(), startPos.getY()), mHeading(0), mLength(1)
 {
 }
 
-coord snake::getHeadPosition()
+Coord Snake::getHeadPosition()
 {
-	return headPos;
+	return mHeadPos;
 }
 
-coord snake::getTailPosition()
+Coord Snake::getTailPosition()
 {
-	return bodyPos.front();
+	return mBodyPos.front();
 }
 
-int snake::getHeadDirection()
+int Snake::getHeadDirection()
 {
-	return heading;
+	return mHeading;
 }
 
-int snake::getLength()
+int Snake::getLength()
 {
-	return length;
+	return mLength;
 }
 
-void snake::move(map& table, int& colliedObj)
+void Snake::move(GameBoard& table, int& colliedObj)
 {
-	coord collCheck = headPos;
-	collCheck.goOneSpace(heading);
+	Coord collCheck = mHeadPos;
+	collCheck.goOneSpace(mHeading);
 	int collObj = table.getTile(collCheck.getX(), collCheck.getY());
 	colliedObj = collObj;
 	if (collObj == BODY || collObj == WALL)
@@ -42,30 +42,30 @@ void snake::move(map& table, int& colliedObj)
 	}
 	else if (collObj == APPLE)
 	{
-		bodyPos.push(headPos);
-		table.setTile(headPos.getX(), headPos.getY(), BODY);
-		length++;
+		mBodyPos.push(mHeadPos);
+		table.setTile(mHeadPos.getX(), mHeadPos.getY(), BODY);
+		mLength++;
 		table.placeApple();
 	}
 	else
 	{
-		if (length > 1)
+		if (mLength > 1)
 		{
-			table.setTile(headPos.getX(), headPos.getY(), BODY);
-			bodyPos.push(headPos);
-			table.setTile(bodyPos.front().getX(), bodyPos.front().getY(), FLOOR);
-			bodyPos.pop();
+			table.setTile(mHeadPos.getX(), mHeadPos.getY(), BODY);
+			mBodyPos.push(mHeadPos);
+			table.setTile(mBodyPos.front().getX(), mBodyPos.front().getY(), FLOOR);
+			mBodyPos.pop();
 		}
 		else
 		{
-			table.setTile(headPos.getX(), headPos.getY(), FLOOR);
+			table.setTile(mHeadPos.getX(), mHeadPos.getY(), FLOOR);
 		}
 	}
-	headPos.goOneSpace(heading);
-	table.setTile(headPos.getX(), headPos.getY(), HEAD);
+	mHeadPos.goOneSpace(mHeading);
+	table.setTile(mHeadPos.getX(), mHeadPos.getY(), HEAD);
 }
 
-void snake::rotate(int direction)
+void Snake::rotate(int direction)
 {
-	heading = direction;
+	mHeading = direction;
 }

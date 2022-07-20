@@ -3,8 +3,8 @@
 #include<stdlib.h>
 #include<Windows.h>
 #include"coord.h"
-#include"snake.h"
-#include"map.h"
+#include"Snake.h"
+#include"gameBoard.h"
 
 #define SIZE 16
 #define START_POS_Y 3
@@ -12,21 +12,17 @@
 
 using namespace std;
 
-static int tick = 500;
-
-static snake player;
-
-void Init(map& table)
+void Init(GameBoard& table, Snake& player)
 {
-	table.initMap();
-	coord* snakePos = new coord(player.getHeadPosition());
-	table.setTile(snakePos->getX(), snakePos->getY(), HEAD);
-	delete snakePos;
+	table.initGameBoard();
+	Coord* SnakePos = new Coord(player.getHeadPosition());
+	table.setTile(SnakePos->getX(), SnakePos->getY(), HEAD);
+	delete SnakePos;
 	table.placeApple();
 	return;
 }
 
-void Update(map& table, bool& isGameOver)
+void Update(GameBoard& table, Snake& player, int& tick, bool& isGameOver)
 {
 	int colliedObj;
 	player.move(table, colliedObj);
@@ -43,28 +39,29 @@ void Update(map& table, bool& isGameOver)
 	return;
 }
 
-void Render(map& table)
+void Render(GameBoard& table, Snake& player)
 {
 	system("cls");
 
-	table.printMap();
+	table.printGameBoard();
 	cout << endl << "SCORE: " << player.getLength() << endl;
 	return;
 }
 
-void Release(map& table)
+void Release(GameBoard& table, Snake& player)
 {
-	delete &table;
 	return;
 }
 
 int main()
 {
-	map* table = new map(SIZE);
+	GameBoard table(SIZE);
+	Snake player(Coord(START_POS_X,START_POS_Y),SIZE*SIZE);
 	bool isGameOver = false;
+	int tick = 500;
 	clock_t curTime, oldTime;
 	srand(time(NULL));
-	Init(*table);
+	Init(table, player);
 
 	while (1)
 	{
@@ -87,14 +84,14 @@ int main()
 			player.rotate(DOWN);
 		}
 		oldTime = clock();
-		Update(*table, isGameOver);
+		Update(table, player, tick, isGameOver);
 		if (isGameOver)
 		{
 			system("cls");
 			cout << "GameOver" << endl;
 			break;
 		}
-		Render(*table);
+		Render(table, player);
 		while (1)
 		{
 			curTime = clock();
@@ -102,6 +99,6 @@ int main()
 				break;
 		}
 	}
-	Release(*table);
+	Release(table, player);
 	return 0;
 }
