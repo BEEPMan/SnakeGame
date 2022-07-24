@@ -101,7 +101,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
@@ -127,14 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="coord.cpp" />
-    <ClCompile Include="gameBoard.cpp" />
+    <ClCompile Include="vector2d.cpp" />
+    <ClCompile Include="gameboard.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="screen.cpp" />
     <ClCompile Include="snake.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="coord.h" />
-    <ClInclude Include="gameBoard.h" />
+    <ClInclude Include="vector2d.h" />
+    <ClInclude Include="gameboard.h" />
+    <ClInclude Include="screen.h" />
     <ClInclude Include="snake.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

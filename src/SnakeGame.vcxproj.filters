@@ -21,10 +21,13 @@
     <ClCompile Include="snake.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="coord.cpp">
+    <ClCompile Include="vector2d.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="gameBoard.cpp">
+    <ClCompile Include="gameboard.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="screen.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,10 +35,13 @@
     <ClInclude Include="snake.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="coord.h">
+    <ClInclude Include="vector2d.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="gameBoard.h">
+    <ClInclude Include="gameboard.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="screen.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

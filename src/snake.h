@@ -1,8 +1,9 @@
 #pragma once
 
 #include<queue>
-#include"coord.h"
-#include"gameBoard.h"
+
+#include"vector2d.h"
+#include"gameboard.h"
 
 using namespace std;
 
@@ -10,16 +11,21 @@ class Snake
 {
 public:
 	Snake();
-	Snake(Coord startPos, int maxSize);
-	Coord getHeadPosition();
-	Coord getTailPosition();
-	int getHeadDirection();
-	int getLength();
-	void move(GameBoard& table, int& colliedObj);
-	void rotate(int direction);
+	Snake(Vector2D start_position, int max_size);
+	Vector2D head_position();
+	Vector2D tail_position();
+	int head_direction();
+	int length();
+	int collided_object();
+	void Move(GameBoard& table);
+	void Rotate(int direction);
 private:
-	Coord mHeadPos;
-	int mHeading;
-	queue<Coord> mBodyPos;
-	int mLength;
+	Snake(const Snake&);
+	void operator=(const Snake&);
+	Vector2D head_position_;
+	int head_direction_;
+	queue<Vector2D> body_position_;
+	int length_;
+	Vector2D collide_checker_;
+	int collided_object_;
 };

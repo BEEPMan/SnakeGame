@@ -1,71 +1,75 @@
-#include"Snake.h"
+#include"snake.h"
 
 Snake::Snake()
-	: mHeadPos(1, 1), mHeading(0), mLength(1)
+	: head_position_(1, 1), head_direction_(0), length_(1)
 {
 }
 
-Snake::Snake(Coord startPos, int maxSize)
-	: mHeadPos(startPos.getX(), startPos.getY()), mHeading(0), mLength(1)
+Snake::Snake(Vector2D startPos, int maxSize)
+	: head_position_(startPos.x(), startPos.y()), head_direction_(0), length_(1)
 {
 }
 
-Coord Snake::getHeadPosition()
+Vector2D Snake::head_position()
 {
-	return mHeadPos;
+	return head_position_;
 }
 
-Coord Snake::getTailPosition()
+Vector2D Snake::tail_position()
 {
-	return mBodyPos.front();
+	return body_position_.front();
 }
 
-int Snake::getHeadDirection()
+int Snake::head_direction()
 {
-	return mHeading;
+	return head_direction_;
 }
 
-int Snake::getLength()
+int Snake::length()
 {
-	return mLength;
+	return length_;
 }
 
-void Snake::move(GameBoard& table, int& colliedObj)
+int Snake::collided_object()
 {
-	Coord collCheck = mHeadPos;
-	collCheck.goOneSpace(mHeading);
-	int collObj = table.getTile(collCheck.getX(), collCheck.getY());
-	colliedObj = collObj;
-	if (collObj == BODY || collObj == WALL)
+	return collided_object_;
+}
+
+void Snake::Move(GameBoard& table)
+{
+	collide_checker_ = head_position_;
+	collide_checker_.GoOneSpace(head_direction_);
+	collided_object_ = table.tile(collide_checker_.x(), collide_checker_.y());
+	if (collided_object_ == BODY || collided_object_ == WALL)
 	{
 		return;
 	}
-	else if (collObj == APPLE)
+	else if (collided_object_ == APPLE)
 	{
-		mBodyPos.push(mHeadPos);
-		table.setTile(mHeadPos.getX(), mHeadPos.getY(), BODY);
-		mLength++;
-		table.placeApple();
+		body_position_.push(head_position_);
+		table.set_tile(head_position_.x(), head_position_.y(), BODY);
+		length_++;
+		table.PlaceApple();
 	}
 	else
 	{
-		if (mLength > 1)
+		if (length_ > 1)
 		{
-			table.setTile(mHeadPos.getX(), mHeadPos.getY(), BODY);
-			mBodyPos.push(mHeadPos);
-			table.setTile(mBodyPos.front().getX(), mBodyPos.front().getY(), FLOOR);
-			mBodyPos.pop();
+			table.set_tile(head_position_.x(), head_position_.y(), BODY);
+			body_position_.push(head_position_);
+			table.set_tile(body_position_.front().x(), body_position_.front().y(), FLOOR);
+			body_position_.pop();
 		}
 		else
 		{
-			table.setTile(mHeadPos.getX(), mHeadPos.getY(), FLOOR);
+			table.set_tile(head_position_.x(), head_position_.y(), FLOOR);
 		}
 	}
-	mHeadPos.goOneSpace(mHeading);
-	table.setTile(mHeadPos.getX(), mHeadPos.getY(), HEAD);
+	head_position_.GoOneSpace(head_direction_);
+	table.set_tile(head_position_.x(), head_position_.y(), HEAD);
 }
 
-void Snake::rotate(int direction)
+void Snake::Rotate(int direction)
 {
-	mHeading = direction;
+	head_direction_ = direction;
 }

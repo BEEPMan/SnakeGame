@@ -1,87 +1,71 @@
-#include"GameBoard.h"
-#include"coord.h"
+#include"gameboard.h"
 
 GameBoard::GameBoard() {}
 
 GameBoard::GameBoard(int size)
-	: mSize(size)
+	: size_(size)
 {
-	mTable = new int* [size];
-	for (int i = 0; i < size; i++)
+	table_ = vector<vector<int>>(size, vector<int>(size, 0));
+}
+
+int GameBoard::tile(int x, int y)
+{
+	return table_[x][y];
+}
+
+void GameBoard::set_tile(int x, int y, int object_number)
+{
+	table_[x][y] = object_number;
+}
+
+void GameBoard::PlaceApple()
+{
+	Vector2D apple_position((int)rand() % (size_ - 2) + 1, (int)rand() % (size_ - 2) + 1);
+	while (table_[apple_position.x()][apple_position.y()] != FLOOR)
 	{
-		mTable[i] = new int[size];
-		memset(mTable[i], 0, (int)sizeof(int) * size);
+		apple_position.set_x((int)rand() % (size_ - 2) + 1);
+		apple_position.set_y((int)rand() % (size_ - 2) + 1);
+	}
+	table_[apple_position.x()][apple_position.y()] = APPLE;
+}
+
+void GameBoard::InitGameBoard()
+{
+	for (int i = 0; i < size_; i++)
+	{
+		table_[i][0] = WALL;
+		table_[0][i] = WALL;
+		table_[i][size_ - 1] = WALL;
+		table_[size_ - 1][i] = WALL;
 	}
 }
 
-GameBoard::~GameBoard()
+void GameBoard::PrintGameBoard()
 {
-	for (int i = 0; i < mSize; i++)
+	for (int i = 0; i < size_; i++)
 	{
-		delete[] mTable[i];
-	}
-	delete[] mTable;
-}
-
-int GameBoard::getTile(int x, int y)
-{
-	return mTable[x][y];
-}
-
-void GameBoard::setTile(int x, int y, int objNum)
-{
-	mTable[x][y] = objNum;
-}
-
-void GameBoard::placeApple()
-{
-	Coord* applePos = new Coord((int)rand() % (mSize - 2) + 1, (int)rand() % (mSize - 2) + 1);
-	while (mTable[applePos->getX()][applePos->getY()] != FLOOR)
-	{
-		applePos = new Coord((int)rand() % (mSize - 2) + 1, (int)rand() % (mSize - 2) + 1);
-	}
-	mTable[applePos->getX()][applePos->getY()] = APPLE;
-	delete applePos;
-}
-
-void GameBoard::initGameBoard()
-{
-	for (int i = 0; i < mSize; i++)
-	{
-		mTable[i][0] = WALL;
-		mTable[0][i] = WALL;
-		mTable[i][mSize - 1] = WALL;
-		mTable[mSize - 1][i] = WALL;
-	}
-}
-
-void GameBoard::printGameBoard()
-{
-	for (int i = 0; i < mSize; i++)
-	{
-		for (int j = 0; j < mSize; j++)
+		for (int j = 0; j < size_; j++)
 		{
-			if (mTable[i][j] == WALL)
+			if (table_[i][j] == WALL)
 			{
-				std::cout << "\u25A0";
+				PrintScreen(j * 2, i, const_cast<char *>("\u25A0"));
 			}
-			else if (mTable[i][j] == FLOOR)
+			else if (table_[i][j] == FLOOR)
 			{
-				std::cout << "\u25A1";
+				PrintScreen(j * 2, i, const_cast<char*>("\u25A1"));
 			}
-			else if (mTable[i][j] == HEAD)
+			else if (table_[i][j] == HEAD)
 			{
-				std::cout << "\u25CF";
+				PrintScreen(j * 2, i, const_cast<char*>("\u25CF"));
 			}
-			else if (mTable[i][j] == BODY)
+			else if (table_[i][j] == BODY)
 			{
-				std::cout << "\u25C6";
+				PrintScreen(j * 2, i, const_cast<char*>("\u25C6"));
 			}
-			else if (mTable[i][j] == APPLE)
+			else if (table_[i][j] == APPLE)
 			{
-				std::cout << "\u2605";
+				PrintScreen(j * 2, i, const_cast<char*>("\u2605"));
 			}
 		}
-		std::cout << std::endl;
 	}
 }
